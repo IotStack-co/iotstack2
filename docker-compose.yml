@@ -3,7 +3,7 @@ version: "3"
 services:
 
     influxdb:
-      image: influxdb:2.2
+      image: influxdb:2.4
       container_name: influxdb
       restart: always
       environment:
@@ -24,9 +24,8 @@ services:
         - "iotstack"
     
     grafana:
-        image: grafana/grafana:7.1.0
+        image: grafana/grafana:9.1.7
         container_name: grafana
-        env_file: prototype.env
         user: "472"
         links: 
             - influxdb
@@ -34,11 +33,6 @@ services:
             - grafana_data:/var/lib/grafana
         networks: 
             - "iotstack"
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.grafana-router=grafana-router@file"
-            - "traefik.http.routers.grafana-router.middlewares=grafana-mw@file"
-            - "traefik.http.routers.grafana-router.service=grafana@file"
 
 volumes: 
     influxdb_data:
