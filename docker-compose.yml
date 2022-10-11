@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+
+    influxdb:
+      image: influxdb:2.2
+      container_name: influxdb
+      restart: always
+      environment:
+        - DOCKER_INFLUXDB_INIT_MODE=${INFLUXDB_INIT_MODE}
+        - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+        - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+        - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_INIT_ORG}
+        - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_INIT_BUCKET}
+        - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_INIT_ADMIN_TOKEN}
+        - INFLUXD_LOG_LEVEL=${INFLUXD_LOG_LEVEL}
+        - TZ=${TZ}
+      volumes:
+        - "./data/influxdb2/conf:/etc/influxdb2"
+        - influxdb_data:/var/lib/influxdb2
+      ports:
+        - ${INFLUXDB_HTTP_PORT}:8086
+      networks:
+        - "iotstack"
+    
+    grafana:
+        image: grafana/grafana:7.1.0
+        container_name: grafana
+        env_file: prototype.env
+        user: "472"
+        links: 
+            - influxdb
+        volumes: 
+            - grafana_data:/var/lib/grafana
+        networks: 
+            - "iotstack"
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.grafana-router=grafana-router@file"
+            - "traefik.http.routers.grafana-router.middlewares=grafana-mw@file"
+            - "traefik.http.routers.grafana-router.service=grafana@file"
+
+volumes: 
+    influxdb_data:
+    grafana_data:
+
+networks: 
+    iotstack:
+        external: true
