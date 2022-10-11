@@ -30,12 +30,9 @@ services:
         container_name: grafana
         links: 
             - influxdb:influxdb
-        environment:
-          - GF_INSTALL_PLUGINS=grafana-clock-panel
         depends_on:
             - influxdb
-        restart:
-          - always
+        restart: always
         ports:
             - 3000:3000
         volumes: 
