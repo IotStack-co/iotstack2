@@ -42,10 +42,10 @@ services:
         - grafana_data:/var/lib/grafana
       datasources:
         - name: Example
-        - url: http://localhost:$PORT
-        - user: $USER
+        - url: http://localhost:8086
+        - user: test
         - secureJsonData:
-            -password: $PASSWORD
+            -password: test
       networks: 
         - iotstack
       privileged: true
