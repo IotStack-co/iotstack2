@@ -21,7 +21,7 @@ services:
       ports:
         - ${INFLUXDB_HTTP_PORT}:8086
       networks:
-        - ${NETWORK}
+        - iotstack
       privileged: true
 
     
@@ -41,7 +41,7 @@ services:
       volumes: 
         - grafana_data:/var/lib/grafana
       networks: 
-        - ${NETWORK}
+        - iotstack
       privileged: true
 
 volumes: 
@@ -49,5 +49,5 @@ volumes:
     grafana_data:
 
 networks: 
-    ${NETWORK}:
+    iotstack:
         external: true
