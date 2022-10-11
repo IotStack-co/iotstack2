@@ -21,30 +21,33 @@ services:
       ports:
         - ${INFLUXDB_HTTP_PORT}:8086
       networks:
-        - "iotstack"   
+        - ${NETWORK}
       privileged: true
 
     
     grafana:
-        image: grafana/grafana-oss:9.1.7
-        container_name: grafana
-        links: 
-            - influxdb:influxdb
-        depends_on:
-            - influxdb
-        restart: always
-        ports:
-            - 3000:3000
-        volumes: 
-            - grafana_data:/var/lib/grafana
-        networks: 
-            - "iotstack"
-        privileged: true
+      image: grafana/grafana-oss:9.1.7
+      container_name: grafana
+      environment:
+        - GF_SECURITY_ADMIN_USER=${GRAFANA_SECURITY_ADMIN_USER}
+        - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_SECURITY_ADMIN_PASSWORD}
+      links: 
+        - influxdb:influxdb
+      depends_on:
+        - influxdb
+      restart: always
+      ports:
+        - ${GRAFANA_HTTP_PORT}:3000
+      volumes: 
+        - grafana_data:/var/lib/grafana
+      networks: 
+        - ${NETWORK}
+      privileged: true
 
 volumes: 
     influxdb_data:
     grafana_data:
 
 networks: 
-    iotstack:
+    ${NETWORK}:
         external: true
