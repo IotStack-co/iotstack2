@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -c --replicas=1
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: grafana
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -c --replicas=1
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/iotstack: "true"
+        io.kompose.service: grafana
+    spec:
+      containers:
+        - env:
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+                  name: env
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_BUCKET
+                  name: env
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_MODE
+                  name: env
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_ORG
+                  name: env
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_PASSWORD
+                  name: env
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DOCKER_INFLUXDB_INIT_USERNAME
+                  name: env
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_SECURITY_ADMIN_PASSWORD
+                  name: env
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_SECURITY_ADMIN_USER
+                  name: env
+            - name: GRAFANA_HTTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: GRAFANA_HTTP_PORT
+                  name: env
+            - name: INFLUXDB_HTTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: INFLUXDB_HTTP_PORT
+                  name: env
+            - name: INFLUXD_LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: INFLUXD_LOG_LEVEL
+                  name: env
+            - name: NETWORK
+              valueFrom:
+                configMapKeyRef:
+                  key: NETWORK
+                  name: env
+            - name: PROJECT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: PROJECT_NAME
+                  name: env
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  key: TZ
+                  name: env
+          image: grafana/grafana-oss:9.1.7
+          name: grafana
+          ports:
+            - containerPort: 3000
+          resources: {}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /var/lib/grafana
+              name: grafana-data
+            - mountPath: /etc/grafana/provisioning/
+              name: grafana-claim1
+      restartPolicy: Always
+      volumes:
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: grafana-data
+        - name: grafana-claim1
+          persistentVolumeClaim:
+            claimName: grafana-claim1
+status: {}

@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: mytoken
+  DOCKER_INFLUXDB_INIT_BUCKET: mybucket
+  DOCKER_INFLUXDB_INIT_MODE: setup
+  DOCKER_INFLUXDB_INIT_ORG: myorg
+  DOCKER_INFLUXDB_INIT_PASSWORD: passwordpasswordpassword
+  DOCKER_INFLUXDB_INIT_USERNAME: myusername
+  GF_SECURITY_ADMIN_PASSWORD: passwordpasswordpassword
+  GF_SECURITY_ADMIN_USER: myusername
+  GRAFANA_HTTP_PORT: "3000"
+  INFLUXD_LOG_LEVEL: warn
+  INFLUXDB_HTTP_PORT: "8086"
+  NETWORK: iotstack
+  PROJECT_NAME: iotstack
+  TZ: Europe/Berlin
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana-env
+  name: env
